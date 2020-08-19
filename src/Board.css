@@ -1,0 +1,10 @@
+.boardGrid{
+    display: grid;
+    grid-template-columns: repeat(8,auto);
+    grid-template-rows: repeat(8,auto);
+    grid-gap: 1px;
+}
+
+.square{
+    background-color: antiquewhite;
+}
