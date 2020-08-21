@@ -6,7 +6,9 @@ import {Ship} from './Ship';
 export class GameManager extends React.Component{
     constructor(props){
         super(props);
-        this.selectedPiece = '';
+        this.state = {
+            selectedPiece: '',
+        }
         this.p1Ships = this.getAllShips(0);
         this.p2Ships = this.getAllShips(5);
         
@@ -19,10 +21,16 @@ export class GameManager extends React.Component{
     selectPiece(event){
         let shipId = event.target.value;
         if(shipId >5){ //player 2
-            this.selectedPiece = this.p2Ships[shipId-6];
+            this.setState({
+                selectedPiece: this.p2Ships[shipId-6]
+            });
+            //this.selectedPiece = this.p2Ships[shipId-6];
         }
         else{//player 1
-            this.selectedPiece = this.p1Ships[shipId-1];
+            this.setState({
+                selectedPiece: this.p1Ships[shipId-1]
+            });
+            // this.selectedPiece = this.p1Ships[shipId-1];
         }
     }
     changeOrientation(event){
@@ -47,8 +55,9 @@ export class GameManager extends React.Component{
     render(){
         return(
             <div>
-            <PieceHolder pieceSelected={this.selectPiece} pieces={this.p1Ships} changeOrientation={this.changeOrientation}/>
-                <Board />
+                <PieceHolder pieceSelected={this.selectPiece} pieces={this.p1Ships} changeOrientation={this.changeOrientation}/>
+                <Board selectedShip={this.state.selectedPiece}/>
+                <PieceHolder pieceSelected={this.selectPiece} pieces={this.p2Ships} changeOrientation={this.changeOrientation}/>
             </div>
         );
     }

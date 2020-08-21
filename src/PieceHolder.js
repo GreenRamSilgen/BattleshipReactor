@@ -10,7 +10,6 @@ export class PieceHolder extends React.Component{
             <div>
             {
                 this.props.pieces.map((singleShip)=>{
-                    console.log(singleShip);
                     return (
                         <div className="shipBtn" key={singleShip.id}>
                         <button  value={singleShip.id} onClick={this.props.pieceSelected}>Ship {singleShip.id}</button>

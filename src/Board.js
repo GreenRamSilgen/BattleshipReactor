@@ -14,10 +14,6 @@ export class Board extends React.Component{
         this.state={
             shipsAndLoc:{},
         }
-        
-        
-        this.selectedShip = Ship({id:1,health:2,isVertical:true});
-        this.tempFakeShip = Ship({id:2,health:3,idVertical:true});
 
 
         this.createBoard = this.createBoard.bind(this);
@@ -26,6 +22,7 @@ export class Board extends React.Component{
         this.verticalPlacementIsValid = this.verticalPlacementIsValid.bind(this);
         this.horizantalPlacementIsValid = this.horizantalPlacementIsValid.bind(this);
         this.sqHasShip = this.sqHasShip.bind(this);
+        this.placementPossible = this.placementPossible.bind(this);
     }
     createBoard(){
         let board=[];
@@ -43,17 +40,22 @@ export class Board extends React.Component{
         console.log(value);
     }
     handlePlaceShip(sqVal){
-        if(this.selectedShip.isVertical){
+        if(this.props.selectedShip.isVertical){
             if(this.verticalPlacementIsValid(sqVal)){
+                if(this.placementPossible(sqVal))
+                {
+                    console.log(this.state.shipsAndLoc);
                 let tempShipAndLoc = this.state.shipsAndLoc;
-                tempShipAndLoc[this.selectedShip.id]=[];
+                tempShipAndLoc[this.props.selectedShip.id]=[];
                 
-                for(let i = 0; i < this.selectedShip.health; i++){
-                    tempShipAndLoc[this.selectedShip.id].push(`${Number(sqVal.charAt(0))+i}${sqVal.charAt(1)}`);
+                for(let i = 0; i < this.props.selectedShip.health; i++){
+                    tempShipAndLoc[this.props.selectedShip.id].push(Number(`${Number(sqVal.charAt(0))+i}${sqVal.charAt(1)}`));
                 }
                 this.setState({shipsAndLoc: tempShipAndLoc});
-                console.log(this.state.shipsAndLoc);
+                
                 return true;
+                }
+                return false;
             }else{
                 console.log("VERTICAL NOT VALID");
                 return false;
@@ -62,15 +64,20 @@ export class Board extends React.Component{
         else{
             
             if(this.horizantalPlacementIsValid(sqVal)){
+                if(this.placementPossible(sqVal))
+                {
+                console.log(this.state.shipsAndLoc);
                 let tempShipAndLoc = this.state.shipsAndLoc;
-                tempShipAndLoc[this.selectedShip.id]=[];
-                for(let i = 0; i < this.selectedShip.health; i++){
-                    tempShipAndLoc[this.selectedShip.id].push(`${sqVal.charAt(0)}${Number(sqVal.charAt(1))+i}`);
+                tempShipAndLoc[this.props.selectedShip.id]=[];
+                for(let i = 0; i < this.props.selectedShip.health; i++){
+                    tempShipAndLoc[this.props.selectedShip.id].push(Number(`${sqVal.charAt(0)}${Number(sqVal.charAt(1))+i}`));
                 }
                 this.setState({shipsAndLoc: tempShipAndLoc});
 
-                console.log(this.state.shipsAndLoc);
+                
                 return true;
+                }
+                return false;
             }else{
                 console.log("Horizantal NOT VALID");
                 return false;
@@ -80,42 +87,47 @@ export class Board extends React.Component{
 
 
     verticalPlacementIsValid(sqVal){
-        return (Number(sqVal.charAt(0))+this.selectedShip.health -1 <= 8) ? true:false;
+        return (Number(sqVal.charAt(0))+this.props.selectedShip.health -1 <= 8) ? true:false;
     }
     horizantalPlacementIsValid(sqVal){
-        return (Number(sqVal.charAt(1))+this.selectedShip.health -1 <= 8) ? true : false;
+        return (Number(sqVal.charAt(1))+this.props.selectedShip.health -1 <= 8) ? true : false;
     }
 
     sqHasShip(loc){
-        let hasIt = false;
         for(let ship in this.state.shipsAndLoc){
             for(let squareValue in this.state.shipsAndLoc[ship]){
+                
                 if(this.state.shipsAndLoc[ship][squareValue] === loc){
-                    console.log(this.state.shipsAndLoc[ship][squareValue]);
-                    console.log("loc"+ loc);
                     return true;
                 }
             }
         }
         return false;
-        // console.log(typeof loc);
-        // for(let sh in this.state.shipsAndLoc){
-        //     console.log(sh);
-        //     if(this.state.shipsAndLoc[sh].includes(loc)){
-        //         console.log("INNER"); 
-        //         return true
-        //     };
-        // }
     }
 
+    placementPossible(loc){
+        let possible = true;
+        if(this.props.selectedShip.isVertical){
+            for(let i = 0; i < this.props.selectedShip.health;i++){
+                if(this.sqHasShip(Number(`${Number(loc.charAt(0))+i}${loc.charAt(1)}`))) possible= false;
+            }
+        }
+        else{
+            for(let i = 0; i < this.props.selectedShip.health;i++){
+                if(this.sqHasShip(Number(`${loc.charAt(0)}${Number(loc.charAt(1))+i}`))) possible=false;
+            }
+        }
+        return possible;
+    }
 
+    
     render(){
         return(
             <div className="boardGrid">
 
             {this.gameBoard.map((gbRow) =>{
                 return gbRow.map((colVal)=>{
-                    return <Square key={colVal} sqVal={colVal} currentShip={this.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={false} hasShip={this.sqHasShip}/>
+                    return <Square key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={false} hasShip={this.sqHasShip}/>
                 })
             })}
             </div>
