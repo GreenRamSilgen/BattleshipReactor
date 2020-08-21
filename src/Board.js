@@ -1,6 +1,5 @@
 import React from 'react';
 import {Square} from './Square';
-import {Ship} from './Ship';
 import './Board.css'
 
 export class Board extends React.Component{
@@ -18,12 +17,21 @@ export class Board extends React.Component{
 
 
         this.createBoard = this.createBoard.bind(this);
+
+
+        //PLAY MODE 
         this.handleSquareClick = this.handleSquareClick.bind(this);
+        this.hitShip = this.hitShip.bind(this);
+        //PLAY MODE END
+
+
+        //PLACE SHIP MODE
         this.handlePlaceShip = this.handlePlaceShip.bind(this);
         this.verticalPlacementIsValid = this.verticalPlacementIsValid.bind(this);
         this.horizantalPlacementIsValid = this.horizantalPlacementIsValid.bind(this);
         this.sqHasShip = this.sqHasShip.bind(this);
         this.placementPossible = this.placementPossible.bind(this);
+        //PLACE SHIP MODE END
 
         this.customCheck = this.customCheck.bind(this);
         this.updateSquareShipState = this.updateSquareShipState.bind(this);
@@ -40,11 +48,34 @@ export class Board extends React.Component{
         return board;
     }
     
+    //find all helpers in PLAY MODE helper section
     handleSquareClick(value){
-        console.log(value);
+        if(this.props.gameOver) return;
+        if(this.props.isP1Turn){
+            if(this.props.boardId === 2){
+                this.props.changeTurn();
+                let hitVal = this.hitShip(value); 
+                return {bId:this.props.boardId, hit:hitVal};
+
+            }
+        }else{
+            if(this.props.boardId === 1){
+                this.props.changeTurn();
+                let hitVal = this.hitShip(value);
+                return {bId:this.props.boardId, hit:hitVal};
+                
+            }
+        }
+        
     }
 
+    //find all helpers in PLACE MODE helper section
     handlePlaceShip(sqVal){
+        //player 1 can only place their pieces on board 1. 
+        if(this.props.isP1Turn && this.props.boardId===2 && this.props.selectedShip.id <= 5) return;
+        //player 2 can only place their pieces on board 2.
+        if(this.props.isP1Turn && this.props.boardId===1 && this.props.selectedShip.id > 5) return;
+        
         if(this.props.selectedShip.isVertical){
             if(this.verticalPlacementIsValid(sqVal)){
                 if(this.placementPossible(sqVal))
@@ -87,7 +118,7 @@ export class Board extends React.Component{
         }
     }
 
-
+    //!PLACE MODE HELPERS
     verticalPlacementIsValid(sqVal){
         return (Number(sqVal.charAt(0))+this.props.selectedShip.health -1 <= 8) ? true:false;
     }
@@ -138,7 +169,28 @@ export class Board extends React.Component{
         }
         return arr;
     }
+    //!PLACEMODE HELPERS END
 
+    //!PLAY MODE HELPERS 
+    hitShip(val){
+        for(let i in this.state.squaresWithShips){
+            if(Number(this.state.squaresWithShips[i]) === Number(val)){
+                let temp = [...this.state.squaresWithShips];
+                if(temp.length === 1){
+                    //TODO: TRIGGER WIN HERE
+                    (this.props.boardId === 1) ? this.props.setWinner(2) : this.props.setWinner(1);
+                }
+                temp.splice(i,1);
+                this.setState({
+                    squaresWithShips: temp,
+                })
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    //!PLAY MODE HELPERS END
     render(){
         return(
             <div className="boardGrid">
@@ -148,11 +200,11 @@ export class Board extends React.Component{
                     if(this.customCheck(colVal))
                     {              
                         //console.log("hasShip " + colVal)
-                        return <Square key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={false} hasShip={this.sqHasShip(colVal)} test="SHIP"/>
+                        return <Square boardId={this.props.boardId} key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={this.props.playMode} hasShip={this.sqHasShip(colVal)} test="SHIP"/>
                     }
                     else{
                         //console.log("inhere" + colVal)
-                        return <Square key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={false} hasShip={this.sqHasShip(colVal)} test="NOSHIP"/>
+                        return <Square boardId={this.props.boardId} key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={this.props.playMode} hasShip={this.sqHasShip(colVal)} test="NOSHIP"/>
                     }
                 })
             })}

@@ -4,7 +4,6 @@ import {GameManager} from './GameManager';
 function App() {
   return (
     <div className="App">
-    {console.log("apprender")}
     <GameManager/>
     </div>
   );

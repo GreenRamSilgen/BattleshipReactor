@@ -8,14 +8,21 @@ export class GameManager extends React.Component{
         super(props);
         this.state = {
             selectedPiece: '',
+            p1Turn: true,
+            playMode: false,
+            winner: '',
         }
         this.p1Ships = this.getAllShips(0);
         this.p2Ships = this.getAllShips(5);
+        
         
 
         this.selectPiece = this.selectPiece.bind(this);
         this.changeOrientation = this.changeOrientation.bind(this);
         this.getAllShips = this.getAllShips.bind(this);
+        this.startGame = this.startGame.bind(this);
+        this.changeTurn = this.changeTurn.bind(this);
+        this.updateWinner = this.updateWinner.bind(this);
     }
 
     selectPiece(event){
@@ -52,12 +59,36 @@ export class GameManager extends React.Component{
         arr.push(Ship({id:5+val,health:2,isVertical:false}));//Destroyer
         return arr;
     }
+
+
+    startGame(){
+        this.setState({
+            playMode: true,
+        });
+    }
+
+    changeTurn(){
+        this.setState({
+            p1Turn: !this.state.p1Turn,
+        })
+    }
+
+    updateWinner(player){
+        this.setState({
+            winner: player
+        })
+    }
     render(){
         return(
             <div>
-                <PieceHolder pieceSelected={this.selectPiece} pieces={this.p1Ships} changeOrientation={this.changeOrientation}/>
-                <Board selectedShip={this.state.selectedPiece}/>
-                <PieceHolder pieceSelected={this.selectPiece} pieces={this.p2Ships} changeOrientation={this.changeOrientation}/>
+            {(this.state.winner) ? "PLAYER " + this.state.winner + " WINS!" : null}
+            {(this.state.playMode) ? null : <PieceHolder pieceSelected={this.selectPiece} pieces={this.p1Ships} changeOrientation={this.changeOrientation} />} 
+                
+                <Board boardId={1} selectedShip={this.state.selectedPiece} isP1Turn={this.state.p1Turn} playMode={this.state.playMode} changeTurn={this.changeTurn} setWinner={this.updateWinner} gameOver={this.state.winner}/>
+                <br></br>
+                <Board boardId={2} selectedShip={this.state.selectedPiece} isP1Turn={this.state.p1Turn} playMode={this.state.playMode} changeTurn={this.changeTurn} setWinner={this.updateWinner} gameOver={this.state.winner}/>
+            {(this.state.playMode) ? null : <PieceHolder pieceSelected={this.selectPiece} pieces={this.p2Ships} changeOrientation={this.changeOrientation} />}
+                <button onClick={this.startGame}>Start</button>
             </div>
         );
     }

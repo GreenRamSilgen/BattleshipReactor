@@ -5,6 +5,8 @@ export class Square extends React.Component{
         super(props);
         this.state = {
             holdingShip: false,
+            hitWithShip: false,
+            clicked: false,
         }
 
 
@@ -17,14 +19,33 @@ export class Square extends React.Component{
             if(this.state.holdingShip) return;
             this.props.placeShip(this.props.sqVal);
         }else{
-            this.props.squareClicked(e.target.value);
+            if(this.state.clicked) return;
+            let res = this.props.squareClicked(e.target.value)
+            if(res === undefined) return;
+            if(Number(res.bId) === Number(this.props.boardId)){
+            this.setState({
+                hitWithShip: res.hit,
+                clicked: true,
+            });
+            }
         }
     }
 
     render(){
+        let tileDisplay;
+        if(this.props.playMode === false){
+            tileDisplay = this.props.test;
+        }else{
+            if(this.state.clicked){
+                tileDisplay = (this.state.hitWithShip) ? "XX" : "--";
+            }
+            else{
+                tileDisplay = "SEA";
+            }
+        }
         return(
             <button className='square' onClick={this.clicked} value={this.props.sqVal}>
-                {this.props.test}
+                {tileDisplay}
             </button>
         );
     }
