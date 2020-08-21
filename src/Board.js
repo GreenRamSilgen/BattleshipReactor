@@ -13,6 +13,7 @@ export class Board extends React.Component{
 
         this.state={
             shipsAndLoc:{},
+            squaresWithShips: [],
         }
 
 
@@ -23,6 +24,9 @@ export class Board extends React.Component{
         this.horizantalPlacementIsValid = this.horizantalPlacementIsValid.bind(this);
         this.sqHasShip = this.sqHasShip.bind(this);
         this.placementPossible = this.placementPossible.bind(this);
+
+        this.customCheck = this.customCheck.bind(this);
+        this.updateSquareShipState = this.updateSquareShipState.bind(this);
     }
     createBoard(){
         let board=[];
@@ -39,6 +43,7 @@ export class Board extends React.Component{
     handleSquareClick(value){
         console.log(value);
     }
+
     handlePlaceShip(sqVal){
         if(this.props.selectedShip.isVertical){
             if(this.verticalPlacementIsValid(sqVal)){
@@ -51,14 +56,13 @@ export class Board extends React.Component{
                 for(let i = 0; i < this.props.selectedShip.health; i++){
                     tempShipAndLoc[this.props.selectedShip.id].push(Number(`${Number(sqVal.charAt(0))+i}${sqVal.charAt(1)}`));
                 }
-                this.setState({shipsAndLoc: tempShipAndLoc});
-                
-                return true;
+                this.setState({
+                    shipsAndLoc: tempShipAndLoc,
+                    squaresWithShips: this.updateSquareShipState(tempShipAndLoc),
+                });
                 }
-                return false;
             }else{
                 console.log("VERTICAL NOT VALID");
-                return false;
             }
         }
         else{
@@ -72,15 +76,13 @@ export class Board extends React.Component{
                 for(let i = 0; i < this.props.selectedShip.health; i++){
                     tempShipAndLoc[this.props.selectedShip.id].push(Number(`${sqVal.charAt(0)}${Number(sqVal.charAt(1))+i}`));
                 }
-                this.setState({shipsAndLoc: tempShipAndLoc});
-
-                
-                return true;
+                this.setState({
+                    shipsAndLoc: tempShipAndLoc,
+                    squaresWithShips: this.updateSquareShipState(tempShipAndLoc),
+                });
                 }
-                return false;
             }else{
                 console.log("Horizantal NOT VALID");
-                return false;
             }
         }
     }
@@ -120,14 +122,38 @@ export class Board extends React.Component{
         return possible;
     }
 
-    
+    customCheck(colVal){
+        for(let val in this.state.squaresWithShips){
+            if(Number(colVal) === this.state.squaresWithShips[val]) return true;
+        }
+        return false;
+    }
+
+    updateSquareShipState(newshipAndLoc){
+        let arr = [];
+        for(let ship in newshipAndLoc){
+            for(let squareValue in newshipAndLoc[ship]){
+                arr.push(newshipAndLoc[ship][squareValue]);
+            }
+        }
+        return arr;
+    }
+
     render(){
         return(
             <div className="boardGrid">
 
             {this.gameBoard.map((gbRow) =>{
                 return gbRow.map((colVal)=>{
-                    return <Square key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={false} hasShip={this.sqHasShip}/>
+                    if(this.customCheck(colVal))
+                    {              
+                        //console.log("hasShip " + colVal)
+                        return <Square key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={false} hasShip={this.sqHasShip(colVal)} test="SHIP"/>
+                    }
+                    else{
+                        //console.log("inhere" + colVal)
+                        return <Square key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={false} hasShip={this.sqHasShip(colVal)} test="NOSHIP"/>
+                    }
                 })
             })}
             </div>
