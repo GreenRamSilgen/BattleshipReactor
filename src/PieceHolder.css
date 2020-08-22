@@ -1,0 +1,32 @@
+img{
+    width: inherit;
+    height: auto;
+}
+
+.shipImgBtn{
+    width: 10vw;
+    height: auto;
+    background-size: contain;
+}
+
+.btnDestroyer{
+    background-image: url('/assets/images/Destroyer.GIF');
+    width: 10vw; 
+}
+
+.btnBattleship{
+    background-image: url('/assets/images/Battleship.GIF');
+    width: 10vw; 
+}
+.btnCruiser{
+    background-image: url('/assets/images/Cruiser.GIF');
+    width: 10vw; 
+}
+.btnCarrier{
+    background-image: url('/assets/images/Carrier.GIF');
+    width: 10vw; 
+}
+.btnSubmarine{
+    background-image: url('/assets/images/Submarine.GIF');
+    width: 10vw; 
+}

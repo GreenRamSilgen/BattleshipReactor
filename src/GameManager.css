@@ -1,0 +1,15 @@
+.game{
+display: flex;
+flex-direction: column;
+height: 80vh;
+justify-content: space-evenly;
+align-items: center;
+}
+
+.p1Board{
+    display: flex;
+}
+
+.p2Board{
+    display: flex;
+}
