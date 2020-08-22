@@ -1,8 +1,11 @@
+html{
+    background: rgb(167 230 227);
+}
 .game{
 display: flex;
 flex-direction: column;
-height: 80vh;
-justify-content: space-evenly;
+height: 100vh;
+justify-content: space-around;
 align-items: center;
 }
 
@@ -13,3 +16,13 @@ align-items: center;
 .p2Board{
     display: flex;
 }
+
+.boardAndMsg{
+    height: inherit;
+    display: flex;
+    flex-direction: column;
+}
+.boardGrid{
+    height: 100%;
+}
+

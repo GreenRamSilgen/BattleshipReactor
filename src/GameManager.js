@@ -88,11 +88,24 @@ export class GameManager extends React.Component{
             
             <div className="p1Board">
                 {(this.state.playMode) ? null : <PieceHolder boardId={1} pieceSelected={this.selectPiece} pieces={this.p1Ships} changeOrientation={this.changeOrientation} />} 
-                <Board boardId={1} selectedShip={this.state.selectedPiece} isP1Turn={this.state.p1Turn} playMode={this.state.playMode} changeTurn={this.changeTurn} setWinner={this.updateWinner} gameOver={this.state.winner}/>
+                <div className="boardAndMsg">
+                    <div className="boardAndMsg__msg">
+                        {(this.state.playMode) ? null : "Player 1 Place Pieces Here"}
+                        {(this.state.playMode && !this.state.p1Turn) ? "Player 2 ATTACK!": null}
+                    </div>
+                    <Board boardId={1} selectedShip={this.state.selectedPiece} isP1Turn={this.state.p1Turn} playMode={this.state.playMode} changeTurn={this.changeTurn} setWinner={this.updateWinner} gameOver={this.state.winner}/>
+                </div>
             </div>
             <div className="p2Board">
                 {(this.state.playMode) ? null : <PieceHolder boardId={2} pieceSelected={this.selectPiece} pieces={this.p2Ships} changeOrientation={this.changeOrientation} />}
-                <Board boardId={2} selectedShip={this.state.selectedPiece} isP1Turn={this.state.p1Turn} playMode={this.state.playMode} changeTurn={this.changeTurn} setWinner={this.updateWinner} gameOver={this.state.winner}/>
+                
+                <div className="boardAndMsg">
+                    <div className="boardAndMsg__msg">
+                        {(this.state.playMode) ? null : "Player 2 Place Pieces Here"}
+                        {(this.state.playMode && this.state.p1Turn) ? "Player 1 ATTACK!": null}
+                    </div>
+                    <Board boardId={2} selectedShip={this.state.selectedPiece} isP1Turn={this.state.p1Turn} playMode={this.state.playMode} changeTurn={this.changeTurn} setWinner={this.updateWinner} gameOver={this.state.winner}/>
+                </div>
             </div>
             <button onClick={this.startGame}>Start</button>
             </div>

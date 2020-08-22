@@ -5,6 +5,43 @@
     grid-gap: 1px;
 }
 
+
 .square{
-    background-color: antiquewhite;
+    background: url('/assets/images/Ocean.jpg');
+    background-size: cover;
+
+    min-height: 4em;
+    min-width: 4em;
+}
+
+.sqDestroyer{
+    background: url('/assets/images/DestroyerOcean.jpg');
+    background-size: cover;
+}
+.sqBattleship{
+    background: url('/assets/images/BattleshipOcean.jpg');
+    background-size: cover;
+}
+
+.sqCruiser{
+    background: url('/assets/images/CruiserOcean.jpg');
+    background-size: cover;
+}
+.sqCarrier{
+    background: url('/assets/images/CarrierOcean.jpg');
+    background-size: cover;
+}
+.sqSubmarine{
+    background: url('/assets/images/SubmarineOcean.jpg');
+    background-size: cover;
+}
+
+.shipHit{
+    background: url('/assets/images/ShipHit.jpg');
+    background-size: cover;
+}
+
+.shipMiss{
+    background: url('/assets/images/ShipMiss.jpg');
+    background-size: cover;
 }

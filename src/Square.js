@@ -32,20 +32,18 @@ export class Square extends React.Component{
     }
 
     render(){
-        let tileDisplay;
+        let sqCl = '';
         if(this.props.playMode === false){
-            tileDisplay = this.props.test;
+            sqCl = this.props.sqClass;
+            
         }else{
             if(this.state.clicked){
-                tileDisplay = (this.state.hitWithShip) ? "XX" : "--";
-            }
-            else{
-                tileDisplay = "SEA";
+                sqCl = (this.state.hitWithShip) ? "shipHit" : "shipMiss";
             }
         }
         return(
-            <button className='square' onClick={this.clicked} value={this.props.sqVal}>
-                {tileDisplay}
+            <button className={'square ' + sqCl} onClick={this.clicked} value={this.props.sqVal}>
+                
             </button>
         );
     }

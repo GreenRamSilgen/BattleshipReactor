@@ -35,6 +35,7 @@ export class Board extends React.Component{
 
         this.customCheck = this.customCheck.bind(this);
         this.updateSquareShipState = this.updateSquareShipState.bind(this);
+        this.getShipType = this.getShipType.bind(this);
     }
     createBoard(){
         let board=[];
@@ -191,6 +192,31 @@ export class Board extends React.Component{
     }
     
     //!PLAY MODE HELPERS END
+
+    getShipType(sqVal){
+        for(let idx in this.state.shipsAndLoc){
+            for(let i = 0; i < this.state.shipsAndLoc[idx].length; i++){
+                if(Number(this.state.shipsAndLoc[idx][i] === Number(sqVal))){
+                    let tempIdx = idx;
+                    if(idx >5) tempIdx -= 5;
+                    switch(Number(tempIdx)){
+                        case 1:
+                            return "sqDestroyer";
+                        case 2:
+                            return "sqBattleship";
+                        case 3:
+                            return "sqCruiser";
+                        case 4:
+                            return "sqCarrier";
+                        case 5:
+                            return "sqSubmarine";
+                        default:
+                            return null;
+                    }
+                }
+            }
+        }
+    }
     render(){
         return(
             <div className="boardGrid">
@@ -200,11 +226,11 @@ export class Board extends React.Component{
                     if(this.customCheck(colVal))
                     {              
                         //console.log("hasShip " + colVal)
-                        return <Square boardId={this.props.boardId} key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={this.props.playMode} hasShip={this.sqHasShip(colVal)} test="SHIP"/>
+                        return <Square className="sqShip" sqClass={this.getShipType(colVal)} boardId={this.props.boardId} key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={this.props.playMode} hasShip={this.sqHasShip(colVal)}/>
                     }
                     else{
                         //console.log("inhere" + colVal)
-                        return <Square boardId={this.props.boardId} key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={this.props.playMode} hasShip={this.sqHasShip(colVal)} test="NOSHIP"/>
+                        return <Square className="sqNoShip" sqClass={this.getShipType(colVal)} boardId={this.props.boardId} key={colVal} sqVal={colVal} currentShip={this.props.selectedShip} squareClicked={this.handleSquareClick} placeShip={this.handlePlaceShip} playMode={this.props.playMode} hasShip={this.sqHasShip(colVal)}/>
                     }
                 })
             })}
